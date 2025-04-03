@@ -17,6 +17,13 @@ namespace Microsoft.Xna.Framework.Graphics
 {
 	public class Texture2D : Texture
 	{
+
+		#region Extensions
+
+		public float TexelWidth { get; private set; }
+		public float TexelHeight { get; private set; }
+		#endregion
+
 		#region Public Properties
 
 		public int Width
@@ -72,6 +79,10 @@ namespace Microsoft.Xna.Framework.Graphics
 			Width = width;
 			Height = height;
 			LevelCount = mipMap ? CalculateMipLevels(width, height) : 1;
+
+			//
+			this.TexelWidth = 1f / (float) width;
+			this.TexelHeight = 1f / (float) height;
 
 			// TODO: Use QueryRenderTargetFormat!
 			if (this is IRenderTarget)

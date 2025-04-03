@@ -29,6 +29,76 @@ namespace Microsoft.Xna.Framework
 	[DebuggerDisplay("{DebugDisplayString,nq}")]
 	public struct Vector4 : IEquatable<Vector4>
 	{
+		#region Extensions
+		public static Vector4 operator *(Vector4 value1, Matrix value2)
+		{
+
+			return Transform(value1, value2);
+		}
+
+		public Vector4 this[double i]
+		{
+			get
+			{
+
+
+				return new Vector4(
+					this[(int) Math.Floor(i * 10000 / 1000f) % 10]
+					, this[(int) Math.Floor(i * 10000 / 100f) % 10]
+					, this[(int) Math.Floor(i * 10000 / 10f) % 10]
+					, this[(int) Math.Ceiling((i % .001) * 10000)]
+					);//Vector4(a[b%10],0,0,0);
+			}
+			set
+			{
+				//v[.4321]= new vector4(1,2,3,4)
+
+				this[(int) Math.Floor(i * 10000 / 1000f) % 10] = value.X;
+				this[(int) Math.Floor(i * 10000 / 100f) % 10] = value.Y;
+				this[(int) Math.Floor(i * 10000 / 10f) % 10] = value.Z;
+				this[(int) Math.Ceiling((i % .001) * 10000)] = value.W;
+			}
+		}
+		public float this[int i]
+		{
+			get
+			{
+				switch (i)
+				{
+					default: return 0;
+					case 1: return X;
+					case 2: return Y;
+					case 3: return Z;
+					case 4: return W;
+				}
+			}
+			set
+			{
+				switch (i)
+				{
+					//case 0: X = Y = Z = W = value; break;
+					case 1: X = value; break;
+					case 2: Y = value; break;
+					case 3: Z = value; break;
+					case 4: W = value; break;
+				}
+			}
+		}
+		/*public static implicit operator Vector4(Vector3 value)
+        {
+            return new Vector4(value, 0);
+        }
+        public static implicit operator Vector4(Vector2 value)
+        {
+            return new Vector4(value, 0,0);
+        }*/
+		/*public static implicit operator Vector4(float value)
+        {
+            return new Vector4(value,0, 0, 0);
+        }*/
+		#endregion
+
+
 		#region Public Static Properties
 
 		/// <summary>

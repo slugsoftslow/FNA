@@ -31,6 +31,43 @@ namespace Microsoft.Xna.Framework
 	[DebuggerDisplay("{DebugDisplayString,nq}")]
 	public struct Color : IEquatable<Color>, IPackedVector, IPackedVector<uint>
 	{
+		#region Extensions
+
+
+
+		/// <summary>
+		/// Constructs an RGBA color from a <see cref="Color"/> and an alpha value.
+		/// </summary>
+		/// <param name="color">A <see cref="Color"/> for RGB values of new <see cref="Color"/> instance.</param>
+		/// <param name="alpha">The alpha component value from 0 to 255.</param>
+		public Color(Color color, int alpha)
+		{
+			if ((alpha & 0xFFFFFF00) != 0)
+			{
+				var clampedA = (uint) MathHelper.Clamp(alpha, Byte.MinValue, Byte.MaxValue);
+
+				packedValue = (color.packedValue & 0x00FFFFFF) | (clampedA << 24);
+			}
+			else
+			{
+				packedValue = (color.packedValue & 0x00FFFFFF) | ((uint) alpha << 24);
+			}
+			
+		}
+
+		/// <summary>
+		/// Constructs an RGBA color from color and alpha value.
+		/// </summary>
+		/// <param name="color">A <see cref="Color"/> for RGB values of new <see cref="Color"/> instance.</param>
+		/// <param name="alpha">Alpha component value from 0.0f to 1.0f.</param>
+		public Color(Color color, float alpha) :
+			this(color, (int) (alpha * 255))
+		{
+		}
+
+
+		#endregion
+
 		#region Public Properties
 
 		/// <summary>
@@ -1665,7 +1702,7 @@ namespace Microsoft.Xna.Framework
 
 		#region Private Constructors
 
-		private Color(uint packedValue)
+		public Color(uint packedValue)
 		{
 			this.packedValue = packedValue;
 		}

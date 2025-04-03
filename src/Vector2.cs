@@ -30,6 +30,114 @@ namespace Microsoft.Xna.Framework
 	[DebuggerDisplay("{DebugDisplayString,nq}")]
 	public struct Vector2 : IEquatable<Vector2>
 	{
+		#region Extensions
+
+		public static Vector2 operator *(Vector2 value1, Matrix value2)
+		{
+
+			return Transform(value1, value2);
+		}
+
+		public static Vector4 operator ^(Vector2 a, double d)
+		{
+			int b = (int) (d * 10000d);
+			return new Vector4(
+				a[(int) Math.Floor(b / 1000f) % 10]
+				, a[(int) Math.Floor(b / 100f) % 10]
+				, a[(int) Math.Floor(b / 10f) % 10]
+				, a[b % 10]
+				);
+
+		}
+		// doesn't make sense for this to return something larger because it's flipping current data not swizzling
+		public static Vector2 operator ^(Vector2 a, float d)
+		{
+			int b = (int) (d * 10000f);
+			return a * new Vector2(
+				Math.Floor(b / 1000f) % 10 == 0 ? 1 : -1
+				, Math.Floor(b / 100f) % 10 == 0 ? 1 : -1
+				);
+		}
+		public static Vector3 operator ~(Vector2 a)
+		{
+			return a[.1234];
+		}
+
+		public Vector2 this[float i]
+		{
+			get
+			{
+				return this ^ i;
+			}
+			set
+			{
+
+			}
+		}
+		public Vector4 this[double i]
+		{
+			get
+			{
+				return new Vector4(
+					this[(int) Math.Floor(i * 10000 / 1000f) % 10]
+					, this[(int) Math.Floor(i * 10000 / 100f) % 10]
+					, this[(int) Math.Floor(i * 10000 / 10f) % 10]
+					, this[(int) Math.Ceiling((i % .001) * 10000)]
+					);//Vector4(a[b%10],0,0,0);
+			}
+			set
+			{
+				//v[.4321]= new vector4(1,2,3,4)
+				this[(int) Math.Floor(i * 10000 / 1000f) % 10] = value.X;
+				this[(int) Math.Floor(i * 10000 / 100f) % 10] = value.Y;
+				this[(int) Math.Floor(i * 10000 / 10f) % 10] = value.Z;
+				this[(int) Math.Ceiling((i % .001) * 10000)] = value.W;
+			}
+		}
+		public float this[int i]
+		{
+			get
+			{
+				switch (i)
+				{
+					default: return 0;
+					case 1: return X;
+					case 2: return Y;
+						//case 3: return 1;
+						//case 4: return 1;
+				}
+
+			}
+			set
+			{
+				switch (i)
+				{
+					//case 0: X = Y = value; break;
+					case 1: X = value; break;
+					case 2: Y = value; break;
+						//case 4: W = value; break;
+				}
+			}
+		}
+		public static implicit operator Vector2(Vector4 value)
+		{
+			return new Vector2(value.X, value.Y);
+		}
+		public static implicit operator Vector2(Vector3 value)
+		{
+			return new Vector2(value.X, value.Y);
+		}
+		/*public static implicit operator Vector2(float value)
+        {
+            return new Vector2(value, 0);
+        }*/
+		/*public static implicit operator float(Vector2 value)
+        {
+            return value.X;
+        }*/
+		#endregion
+
+
 		#region Public Static Properties
 
 		/// <summary>
